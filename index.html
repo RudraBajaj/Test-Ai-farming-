@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI Farming</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            margin: auto;
+            overflow: hidden;
+            /* max-width: 1500px; */
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 30px;
+            /* Default padding for other sections */
+        }
+
+        /* Add a specific class for the home button */
+        .home-button {
+            scroll-padding-top: 100px;
+            /* Adjust this value as needed */
+        }
+
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        footer .social-media a {
+            color: #77aaff;
+            margin: 0 10px;
+            text-decoration: none
+        }
+
+        footer .social-media a:hover {
+            color: #ff7f50;
+        }
+
+        footer p {
+            margin: 10px 0 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 30px;
+            min-height: 70px;
+
+            border-bottom: #007bff 2px solid;
+            /* backdrop-filter: blur(10px);*/
+
+            /* display: flex; */
+            /* align-items: center; */
+            /* justify-content: space-between; */
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header .logo {
+            float: left;
+            font-size: 24px;
+            font-weight: bold;
+
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            /* line-height: 1; */
+
+            transform: translateY(5px)
+        }
+
+        header nav {
+            float: inline-end;
+            /* margin-left: 600px; */
+            /* margin-top: 10px; */
+        }
+
+        header nav ul {
+            margin: 0;
+            /* padding: 0; */
+            list-style: none;
+
+
+            display: flex;
+            /* align-items: center; */
+        }
+
+        header nav ul li {
+            font-size: 18px;
+            color: #fff;
+            text-decoration: none;
+
+            padding: 8px 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        header nav ul li::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: #ff7f50;
+            bottom: 0;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        header nav ul li:hover::after {
+            width: 100%;
+        }
+
+        header nav ul li:hover {
+            color: #ff7f50;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+        }
+
+        .overlay.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .enlarged-img {
+            max-width: 80%;
+            max-height: 80%;
+            border-radius: 10px;
+            animation: zoomIn 0.5s ease;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: #fff;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #ff7f50;
+            /* Change color on hover */
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Add this new class */
+        .navbar-sticky {
+            position: relative;
+            /* Change to relative when overlay is active */
+        }
+
+
+        #about {
+            padding: 50px 40px;
+            text-align: center;
+        }
+
+        #about h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        #about p {
+            font-size: 18px;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .contact {
+            padding: 50px;
+            text-align: center;
+        }
+
+        .contact h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        /* .contact form { */
+        /* min-width: 600px; */
+        /* margin: auto; */
+        /* } */
+
+        .contact form input,
+        .contact form textarea {
+            width: 50%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .contact form button {
+            background: #77aaff;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+
+            margin: 0 auto;
+            /* Center the button */
+            display: block;
+            /* Ensure it takes its own line */
+        }
+
+        .contact form button:hover {
+            background: #ff7f50;
+        }
+
+        .Features {
+            padding: 50px 0;
+            text-align: center;
+        }
+
+        .Features h2 {
+            font-size: 36px;
+        }
+
+        .feature-list {
+            display: flex;
+            /* justify-content: space-around; */
+            justify-content: space-between;
+            /* flex-wrap: wrap; */
+        }
+
+        .feature-item {
+            /* flex: 1; */
+            margin: 10px;
+            padding: 20px;
+            background: #f4f4f4;
+            border-radius: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-item h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .feature-item p {
+            font-size: 16px;
+            padding: 20px 20px;
+        }
+
+        .gallery {
+            padding: 50px 0;
+            text-align: center;
+        }
+
+        .gallery h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .img-grid {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .img-grid img {
+            /* flex: 1 1 30%; */
+            margin: 10px;
+            width: 30%;
+            height: auto;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .img-grid img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        #hero {
+            position: relative;
+            background: url('../../Assets/BGIMG.png') center center/cover;
+            background-position: center 14.7%;
+            width: 100%;
+            color: #fff;
+            height: 650px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        #hero h1,
+        #hero p,
+        #hero .btn {
+            position: relative;
+            z-index: 2;
+        }
+
+        #hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        #hero p {
+            font-size: 25px;
+            /* margin-bottom: 20px; */
+        }
+
+        #hero .btn {
+            background: #77aaff;
+            text-decoration: none;
+            color: #fff;
+            padding: 10px 20px;
+            padding-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        /* =================
+           RESPONSIVE DESIGN
+           ================= */
+
+        /* TABLET STYLES (max-width: 768px)
+           ============================== */
+        @media screen and (max-width: 768px) {
+            /* Navigation Changes */
+
+            .hamburger {
+                display: block;
+                z-index: 1001;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -6px);
+            }
+
+            header .container {
+                text-align: center;
+                position: relative;
+            }
+
+            header nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                background-color: #333;
+                height: 100vh;
+                width: 70%;
+                padding-top: 80px;
+                transition: 0.3s ease;
+            }
+
+            header nav.active {
+                right: 0;
+            }
+
+            header nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            header nav ul li {
+                margin: 15px 0;
+                font-size: 20px;
+            }
+
+            /* Feature Section Changes */
+            .feature-list {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .feature-item {
+                width: 90%;
+                margin: 10px 0;
+            }
+
+            /* Gallery Changes */
+            .img-grid img {
+                width: 45%;
+                /* Changed from 30% to 45% - 2 images per row */
+            }
+
+            /* Contact Form Changes */
+            .contact form input,
+            .contact form textarea {
+                width: 90%;
+                /* Changed from 50% to 90% for better mobile input */
+            }
+        }
+
+        /* MOBILE STYLES (max-width: 480px)
+           ============================== */
+        @media screen and (max-width: 480px) {
+
+            body {
+                font-size: 13px;
+                margin: 10px;
+            }
+
+            .box {
+                padding: 10px;
+                transform: scale(0.95);
+            }
+
+            /* Hero Section Changes */
+            #hero h1 {
+                font-size: 32px;
+                /* Reduced from 48px */
+            }
+
+            #hero p {
+                font-size: 18px;
+                /* Reduced from 25px */
+            }
+
+            /* Gallery Changes */
+            .img-grid img {
+                width: 90%;
+                /* Changed to single column layout */
+            }
+
+            /* About Section Changes */
+            #about {
+                padding: 30px 20px;
+                /* Reduced padding */
+            }
+
+            #about h2 {
+                font-size: 28px;
+                /* Reduced from 36px */
+            }
+
+            #about p {
+                font-size: 16px;
+                /* Reduced from 18px */
+            }
+
+            /* Features Changes */
+            .Features h2 {
+                font-size: 28px;
+                /* Reduced from 36px */
+            }
+
+            .feature-item {
+                width: 100%;
+                /* Full width on mobile */
+            }
+
+            /* Layout Changes */
+            .container {
+                width: 95%;
+                /* Increased from 90% */
+            }
+        }
+
+        /* SMALL DEVICE STYLES (max-width: 320px)
+           ================================== */
+        @media screen and (max-width: 320px) {
+
+            /* Header Changes */
+            header .logo {
+                font-size: 20px;
+                /* Reduced from 24px */
+            }
+
+            header nav ul li {
+                font-size: 16px;
+                /* Reduced from 18px */
+            }
+
+            /* Hero Changes */
+            #hero h1 {
+                font-size: 28px;
+                /* Further reduced for smallest screens */
+            }
+        }
+
+        /* =============================================
+           NEW ADDITIONS FOR RESPONSIVE NAVIGATION
+           ============================================= */
+
+        /* 1. Hamburger Menu Styles */
+        .hamburger {
+            display: none;
+            /* Hidden by default, shown in mobile */
+            cursor: pointer;
+            padding: 10px;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        /* 2. Mobile Navigation Styles */
+        @media screen and (max-width: 768px) {
+
+            /* Hamburger Animation */
+            .hamburger {
+                display: block;
+                z-index: 1001;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -6px);
+            }
+
+            /* Mobile Menu Slide-in */
+            header nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                /* Hide off-screen initially */
+                background-color: #333;
+                height: 100vh;
+                width: 70%;
+                padding-top: 80px;
+                transition: 0.3s ease;
+            }
+
+            header nav.active {
+                right: 0;
+                /* Slide in when active */
+            }
+
+            /* Mobile Menu Items */
+            header nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            header nav ul li {
+                margin: 15px 0;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">Smart Farming</div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav>
+                <ul>
+                    <li class="home-button" onclick="window.location.href='#hero'">Home</li>
+                    <li onclick="window.location.href='#about'">About</li>
+                    <li onclick="window.location.href='#Features'">Features</li>
+                    <li onclick="window.location.href='#gallery'">Gallery</li>
+                    <li onclick="window.location.href='#contact'">Contact</li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="container">
+            <h1>Revolutionizing Agriculture with AI and IoT</h1>
+            <p>Smart Farming Solutions for a Sustainable Future</p>
+            <!-- <a href="#" class="btn">Learn More</a> -->
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="conatiner">
+            <h2>About AI Farming</h2>
+            <p>Our project leverages the power of Artificial Intelligence and the Internet of Things to create smart
+                farming solutions that increase efficiency, reduce waste, and promote sustainable agricultural
+                practices.</p>
+        </div>
+    </section>
+
+    <section id="Features" class="Features">
+        <div class="container">
+            <h2>Key Features</h2>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h3>Real-Time Monitoring</h3>
+                    <p>Monitor soil moisture, temperature, and humidity in real-time</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Automated Irrigation</h3>
+                    <p>Automatically control irrigation systems based on sensor data</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Data Analysis</h3>
+                    <p>Use AI to analyze data and provide actionable insights.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="gallery">
+        <div class="container">
+            <h2>Gallery</h2>
+            <div class="img-grid">
+                <img src="Assets/pic1.jpg" alt="Img 1">
+                <img src="Assets/pic2.jpg" alt="Img 2">
+                <img src="Assets/pic3.jpg" alt="Img 3">
+            </div>
+        </div>
+        <div class="overlay" id="overlay">
+            <span class="close-btn">&times;</span>
+            <img id="enlarged-img" class="enlarged-img" src="" alt=" En img">
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2>Contact Us</h2>
+            <form action="#" method="post">
+                <input type="text" name="name" placeholder="Your Name">
+                <input type="email" name="email" placeholder="Your Email" required>
+                <textarea name="message" placeholder="Your Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="social-media">
+                <a href="#">Facebook</a><a href="#">Twitter</a><a href="#">Linkdn</a>
+            </div>
+            <p>&copy; 2025 Smart Farming. All rights reserved.</p>
+        </div>
+    </footer>
+    <script>
+        document.querySelector('.home-button').addEventListener('click', function () {
+            const target = document.getElementById('hero');
+            window.scrollTo({
+                top: target.offsetTop - 100,
+                behavior: 'smooth'
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const galleryImages = document.querySelectorAll('.img-grid img'); // Target the images inside .img-grid
+            const overlay = document.getElementById('overlay');
+            const enlargedImg = document.getElementById('enlarged-img');
+            const closeBtn = document.querySelector('.close-btn');
+            const navbar = document.querySelector('nav'); // Select the navbar
+
+            // Add click event to each image
+            galleryImages.forEach((img) => {
+                img.addEventListener('click', () => {
+                    enlargedImg.src = img.src;
+                    overlay.classList.add('active');
+                    navbar.classList.add('navbar-sticky'); // Add sticky class
+                });
+            });
+
+            // Close the overlay when the close button is clicked
+            closeBtn.addEventListener('click', () => {
+                overlay.classList.remove('active'); // Hide the overlay
+                navbar.classList.remove('navbar-sticky'); // Remove sticky class
+            });
+
+            // Close the overlay when clicking outside the image
+            overlay.addEventListener('click', (noob) => {
+                if (noob.target === overlay) {
+                    overlay.classList.remove('active'); // Hide the overlay
+                    navbar.classList.remove('navbar-sticky'); // Remove sticky class
+                }
+            });
+
+            /* === Mobile Navigation Controls === */
+            const hamburger = document.querySelector('.hamburger');
+            const nav = document.querySelector('header nav');
+            const navLinks = document.querySelectorAll('header nav ul li');
+
+            // 1. Toggle Menu
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                nav.classList.toggle('active');
+            });
+
+            // 2. Close Menu on Link Click
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    nav.classList.remove('active');
+                });
+            });
+
+            // 3. Close Menu on Outside Click
+            document.addEventListener('click', (e) => {
+                if (!nav.contains(e.target) && !hamburger.contains(e.target)) {
+                    hamburger.classList.remove('active');
+                    nav.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
